@@ -1,0 +1,6 @@
+---
+quota_groups:
+  labels:
+    - dcs.itsmoplosgroep
+  catch_all_quota_group: blockresources
+  patch_path: "/spec/selector/labels/matchExpressions/0/values/-"
