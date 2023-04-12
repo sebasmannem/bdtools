@@ -9,7 +9,7 @@ RUN apk update && \
     go mod tidy && \
     go build -o ./bin/bdtools ./cmd/bdtools
 
-FROM alpine/git
+FROM alpine:latest
 
 COPY --from=bdtoolsbuilder /usr/src/app/bin/bdtools /usr/local/bin/
 COPY config/bdtools.yaml /etc/bdtools/config.yaml
