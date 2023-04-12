@@ -10,6 +10,7 @@ import (
 	quotaV1 "github.com/openshift/client-go/quota/clientset/versioned/typed/quota/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"strings"
 )
 
 const (
@@ -66,7 +67,7 @@ func (c *Config) setBlockedQuotaGroups(quota qApi.ClusterResourceQuota) {
 			log.Debugf("looping though matchexpression values for %s", c.CatchAllQuotaGroup)
 			for _, blockedQuotaGroup := range matchExpression.Values {
 				log.Debugf("adding %s to the internal list of blockedQuotaGroups", c.CatchAllQuotaGroup)
-				blockedQuotaGroups[blockedQuotaGroup] = true
+				blockedQuotaGroups[strings.ToLower(blockedQuotaGroup)] = true
 			}
 		}
 	}
@@ -87,7 +88,7 @@ func (c *Config) getQuotaGroups() (groups, error) {
 		var q qApi.ClusterResourceQuota
 		for _, q = range quotas.Items {
 			log.Debug("adding to internal list of quota groups")
-			quotaGroups[q.Name] = true
+			quotaGroups[strings.ToLower(q.Name)] = true
 			c.setBlockedQuotaGroups(q)
 		}
 	}
@@ -128,7 +129,7 @@ func (c Config) getProjectGroups() (groups, error) {
 		var p pApi.Project
 		log.Debugf("looping through %d projects", projects.Size())
 		for _, p = range projects.Items {
-			projectGroups[c.GetProjectLabel(p.GetLabels())] = true
+			projectGroups[strings.ToLower(c.GetProjectLabel(p.GetLabels()))] = true
 		}
 	}
 	return projectGroups, nil
